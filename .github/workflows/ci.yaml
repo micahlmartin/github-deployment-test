@@ -18,7 +18,7 @@ jobs:
 
       - name: debug
         run: |
-          echo "${{ github.event }}"
+          echo ${{ github }}
 
       - uses: actions/checkout@v2
         with:
