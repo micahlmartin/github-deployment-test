@@ -16,6 +16,10 @@ jobs:
 
     steps:
 
+      - name: debug
+        run: |
+          echo "${{ github }}"
+
       - uses: actions/checkout@v2
         with:
           persist-credentials: false
