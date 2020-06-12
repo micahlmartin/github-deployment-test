@@ -1,5 +1,5 @@
 {
-  "ref": "master",
+  "ref": "0fc53a4",
   "task": "deploy",
   "environment": "production"
 }

@@ -4,7 +4,7 @@ on: [deployment]
 
 jobs:
 
-  ci:
+  deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -16,6 +16,10 @@ jobs:
       - name: debug
         run:
           echo "${{ toJson(github) }}"
+
+      - name: Set commit version info
+        run: |
+          echo "::set-env name=VERSION::$(echo "${{ github.event.deployment.sha }}" | cut -c1-7)"
 
       - name: Update deployment status
         run: |
@@ -31,6 +35,10 @@ jobs:
                 }"
 
       
+      - name: Docker pull
+        run: |
+          docker pull micahlmartin/github-deployment-test:$VERSION
+
       - name: "Sleep for 30 seconds"
         run: |
           sleep 30s
