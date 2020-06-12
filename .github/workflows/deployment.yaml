@@ -24,6 +24,8 @@ jobs:
         run: |
           curl -X POST \
             --url https://api.github.com/repos/micahlmartin/github-deployment-test/${{ github.event.deployment.id }}/statuses \
+            -H 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+            -H 'content-type: application/json' \
             -d "{ \
                   \"environment\": \"${{ github.event.deployment.environment }}\", \
                   \"state\": \"success\", \
