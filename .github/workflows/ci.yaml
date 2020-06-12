@@ -1,0 +1,44 @@
+name: CI
+
+on: 
+  push:
+  pull_request:
+  release:
+    types: [published]
+
+env:
+  IMAGE_REPOSITORY: micahlmartin/github-deployment-test
+
+jobs:
+
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+
+      - uses: actions/checkout@v2
+        with:
+          persist-credentials: false
+
+      - name: Set release version info
+        if: github.event_name == 'release'
+        run: |
+          echo "::set-env name=VERSION::${{ github.event.release.tag_name }}"
+      
+      - name: Set commit version info
+        if: github.event_name == 'push'
+        run: |
+          echo "::set-env name=VERSION::$(echo "$GITHUB_SHA" | cut -c1-7)"
+
+      - name: Set PR version info
+        if: github.event_name == 'pull_request'
+        run: |
+          echo "::set-env name=VERSION::pr-${{ github.event.pull_request.number }}"
+      
+      - name: Set build info
+        run: |
+          echo "::set-env name=IMAGE::${IMAGE_REPOSITORY}:${VERSION}"
+
+      - name: Build docker container
+        run: |
+          docker build -t ${IMAGE} .
