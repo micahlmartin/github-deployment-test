@@ -23,7 +23,7 @@ jobs:
       - name: Update deployment status
         run: |
           curl -X POST \
-            --url https://api.github.com/repos/micahlmartin/github-deployment-test/${{ github.event.deployment.id }}/statuses \
+            --url ${{ github.event.deployment.statuses_url }} \
             -H 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
             -H 'content-type: application/json' \
             -d "{ \
