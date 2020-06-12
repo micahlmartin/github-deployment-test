@@ -18,7 +18,18 @@ jobs:
     
       - name: debug
         run:
-          echo "${{ github }}" | jq
+          echo "${{ toJson(github) }}"
+
+      # - name: Update deployment status
+      #   run: |
+      #     curl -X POST \
+      #       --url https://api.github.com/repos/micahlmartin/de
+      #     {
+      #       "environment": "production",
+      #       "state": "success",
+      #       "log_url": "https://example.com/deployment/42/output",
+      #       "description": "Deployment finished successfully."
+          # }
       # - name: Set release version info
       #   if: github.event_name == 'release'
       #   run: |
