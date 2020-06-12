@@ -2,9 +2,6 @@ name: Deploy
 
 on: [deployment]
 
-env:
-  IMAGE_REPOSITORY: micahlmartin/github-deployment-test
-
 jobs:
 
   ci:
@@ -19,6 +16,24 @@ jobs:
       - name: debug
         run:
           echo "${{ toJson(github) }}"
+
+      - name: Update deployment status
+        run: |
+          curl -X POST \
+            --url ${{ github.event.deployment.statuses_url }} \
+            -H 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+            -H 'content-type: application/json' \
+            -H 'accept: application/vnd.github.flash-preview+json' \
+            -d "{ \
+                  \"environment\": \"${{ github.event.deployment.environment }}\", \
+                  \"state\": \"in_progress\", \
+                  \"description\": \"Uploading assets to S3 bucket.\" \
+                }"
+
+      
+      - name: "Sleep for 30 seconds"
+        run: |
+          sleep 30s
 
       - name: Update deployment status
         run: |
