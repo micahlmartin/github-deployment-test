@@ -1,5 +1,5 @@
 {
-  "ref": "0fc53a4",
+  "ref": "70a49f2",
   "task": "deploy",
-  "environment": "production"
+  "environment": "qa"
 }
