@@ -1,5 +1,5 @@
 {
-  "ref": "fdbd967",
-  "task": "deploy",
+  "ref": "master",
+  "task": "production",
   "environment": "qa"
 }

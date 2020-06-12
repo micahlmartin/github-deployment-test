@@ -34,14 +34,16 @@ jobs:
                   \"description\": \"Uploading assets to S3 bucket.\" \
                 }"
 
-      
-      - name: Docker pull
+      - name: Fetch assets
         run: |
           docker pull micahlmartin/github-deployment-test:sha-${VERSION}
+          CONTAINER=$(docker create micahlmartin/github-deployment-test:sha-${VERSION})
+          docker cp $CONTAINER:/srv/build ./build
+          ls -la ./build
 
-      - name: "Sleep for 30 seconds"
+      - name: Upload to S3
         run: |
-          sleep 30s
+          echo "Upload assets to S3"
 
       - name: Update deployment status
         run: |
