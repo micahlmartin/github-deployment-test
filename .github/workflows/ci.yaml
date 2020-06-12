@@ -18,7 +18,7 @@ jobs:
 
       - name: debug
         run: |
-          echo ${{ github }}
+          echo "${{ toJson(github) }}"
 
       - uses: actions/checkout@v2
         with:
