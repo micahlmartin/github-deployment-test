@@ -1,0 +1,6 @@
+{
+  "ref": "master",
+  "task": "deploy",
+  "environment": "qa",
+  "description": "Test QA deployment"
+}

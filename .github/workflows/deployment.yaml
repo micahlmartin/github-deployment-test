@@ -18,7 +18,7 @@ jobs:
     
       - name: debug
         run:
-          echo "${{ github.event_name }}" | jq
+          echo "${{ github }}" | jq
       # - name: Set release version info
       #   if: github.event_name == 'release'
       #   run: |
