@@ -58,7 +58,7 @@ jobs:
       - name: Set status on failure
         if: ${{ failure() }}
         run: |
-          echo "::set-env name=STATUS::failed"
+          echo "::set-env name=STATUS::failure"
       
       - name: Set status on success
         if: ${{ success() }}
