@@ -1,4 +1,4 @@
 {
   "ref": "master",
-  "environment": "qa"
+  "environment": "production"
 }
