@@ -3,8 +3,7 @@ name: CI
 on: 
   push:
   pull_request:
-  release:
-    types: [published]
+
 
 jobs:
 
@@ -47,3 +46,12 @@ jobs:
           repository: micahlmartin/github-deployment-test
           tag_with_ref: true
           tag_with_sha: true
+
+      - name: Deploy to QA
+        if: github.ref == 'refs/heads/master'
+        uses: elgohr/Github-Hub-Action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: api -X POST /repos/micahlmartin/github-deployment-test/deployments -F ref=master -F environment=qa
+
