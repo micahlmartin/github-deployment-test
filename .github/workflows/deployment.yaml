@@ -66,7 +66,7 @@ jobs:
           echo "::set-env name=STATUS::success"
 
       - name: Update deployment status
-        if: ${{ success() }}
+        if: ${{ always() }}
         run: |
           curl -X POST \
             --url ${{ github.event.deployment.statuses_url }} \
