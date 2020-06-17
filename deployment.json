@@ -1,5 +1,4 @@
 {
   "ref": "master",
-  "task": "production",
   "environment": "qa"
 }

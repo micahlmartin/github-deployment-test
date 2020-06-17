@@ -48,7 +48,25 @@ jobs:
         run: |
           echo "Upload assets to S3"
 
+      # - name: Create a Release
+      #   uses: elgohr/Github-Hub-Action@master
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   with:
+      #     args: api -X create $(date +%Y%m%d%H%M%S)
+
+      - name: Set status on failure
+        if: ${{ failure() }}
+        run: |
+          echo "::set-env name=STATUS::failed"
+      
+      - name: Set status on success
+        if: ${{ success() }}
+        run: |
+          echo "::set-env name=STATUS::success"
+
       - name: Update deployment status
+        if: ${{ success() }}
         run: |
           curl -X POST \
             --url ${{ github.event.deployment.statuses_url }} \
@@ -56,7 +74,7 @@ jobs:
             -H 'content-type: application/json' \
             -d "{ \
                   \"environment\": \"${{ github.event.deployment.environment }}\", \
-                  \"state\": \"success\", \
+                  \"state\": \"${STATUS}\", \
                   \"description\": \"Deployment finished successfully.\" \
                 }"
 

@@ -1,0 +1,17 @@
+{
+    "env": {
+    "name": "DEV"
+     },
+    "apiServer": {
+    "baseUrl": "http://astroapi.local"
+    },
+    "pageServer": {
+        "baseUrl": "http://astropage.local"
+        },
+    "homeServer": {
+    "baseUrl": "http://astroref.local/"
+    },
+    "searchServer": {
+        "baseUrl": "http://search.astromat.org/"
+    }
+}

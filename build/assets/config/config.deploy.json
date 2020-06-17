@@ -1,0 +1,17 @@
+{
+    "env": {
+    "name": "DEPLOY"
+     },
+    "apiServer": {
+        "baseUrl": "http://api.astromat.org"
+    },
+    "pageServer": {
+        "baseUrl": "http://page.astromat.org"
+        },
+    "homeServer": {
+    "baseUrl": "http://ref.astromat.org/"
+    },
+    "searchServer": {
+        "baseUrl": "http://search.astromat.org/"
+    }
+}
