@@ -41,8 +41,8 @@ jobs:
         run: |
           docker pull micahlmartin/github-deployment-test:sha-${VERSION}
           CONTAINER=$(docker create micahlmartin/github-deployment-test:sha-${VERSION})
-          docker cp $CONTAINER:/srv/build ./build
-          ls -la ./build
+          docker cp $CONTAINER:/srv/build ./assets
+          ls -la ./assets
 
       - name: Upload to S3
         uses: jakejarvis/s3-sync-action@master
@@ -53,8 +53,8 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_REGION: 'us-west-1'
-          SOURCE_DIR: ./build/
-          DEST_DIR: /
+          SOURCE_DIR: ./assets
+
       # - name: Create a Release
       #   uses: elgohr/Github-Hub-Action@master
       #   env:
