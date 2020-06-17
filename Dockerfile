@@ -9,7 +9,7 @@ FROM node:14.4.0-stretch-slim
 
 # RUN npm ci
 
-# COPY ./ /srv
+COPY ./ /srv
 
 # RUN npm run build-prod
 

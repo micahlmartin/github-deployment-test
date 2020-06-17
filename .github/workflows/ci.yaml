@@ -45,19 +45,14 @@ jobs:
           tag_with_ref: true
           tag_with_sha: true
 
-      - name: Deploy to QA
-        if: github.ref == 'refs/heads/master'
-        # uses: elgohr/Github-Hub-Action@master
-        # env:
-        #   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        # with:
-        #   args: api -X POST /repos/micahlmartin/github-deployment-test/deployments -F ref=master -F environment=qa
-        run: |
-          curl -X POST \
-            --url https://api.github.com/repos/micahlmartin/github-deployment-test/deployments \
-            -H 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
-            -H 'content-type: application/json' \
-            -d "{ \
-                  \"ref\": \"master\", \
-                  \"environment\": \"qa\" \
-                }"
+      # - name: Deploy to QA
+      #   if: github.ref == 'refs/heads/master'
+      #   run: |
+      #     curl -X POST \
+      #       --url https://api.github.com/repos/micahlmartin/github-deployment-test/deployments \
+      #       -H 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+      #       -H 'content-type: application/json' \
+      #       -d "{ \
+      #             \"ref\": \"master\", \
+      #             \"environment\": \"qa\" \
+      #           }"
