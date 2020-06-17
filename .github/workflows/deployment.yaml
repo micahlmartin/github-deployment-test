@@ -5,6 +5,12 @@ on:
     branches:
       - master
 
+env:
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_REGION: 'us-west-1'
+  AWS_S3_BUCKET: ${{ secrets.S3_BUCKET_STAGING }}
+
 jobs:
 
   deploy:
@@ -23,6 +29,11 @@ jobs:
       - name: Set commit version info
         run: |
           echo "::set-env name=VERSION::$(echo "${{ github.event.deployment.sha }}" | cut -c1-7)"
+      
+      - name: Set production bucket
+        if: ${{ github.event.deployment.environment == 'production' }}
+        run: |
+          echo "::set-env name=AWS_S3_BUCKET::$(echo "${{ secrets.S3_BUCKET_PRODUCTION }}" | cut -c1-7)"
 
       - name: Update deployment status
         run: |
@@ -50,17 +61,7 @@ jobs:
           args: --acl public-read --follow-symlinks --delete
         env:
           AWS_S3_BUCKET: ${{ secrets.S3_BUCKET_STAGING }}
-          # AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          # AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: 'us-west-1'
           SOURCE_DIR: ./assets
-
-      # - name: Create a Release
-      #   uses: elgohr/Github-Hub-Action@master
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   with:
-      #     args: api -X create $(date +%Y%m%d%H%M%S)
 
       - name: Set status on failure
         if: ${{ failure() }}
@@ -84,26 +85,3 @@ jobs:
                   \"state\": \"${STATUS}\", \
                   \"description\": \"Deployment finished successfully.\" \
                 }"
-
-      # - name: Set release version info
-      #   if: github.event_name == 'release'
-      #   run: |
-      #     echo "::set-env name=VERSION::${{ github.event.release.tag_name }}"
-      
-      # - name: Set commit version info
-      #   if: github.event_name == 'push'
-      #   run: |
-      #     echo "::set-env name=VERSION::$(echo "$GITHUB_SHA" | cut -c1-7)"
-
-      # - name: Set PR version info
-      #   if: github.event_name == 'pull_request'
-      #   run: |
-      #     echo "::set-env name=VERSION::pr-${{ github.event.pull_request.number }}"
-      
-      # - name: Set build info
-      #   run: |
-      #     echo "::set-env name=IMAGE::${IMAGE_REPOSITORY}:${VERSION}"
-
-      # - name: Build docker container
-      #   run: |
-      #     docker build -t ${IMAGE} .
