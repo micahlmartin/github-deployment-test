@@ -29,12 +29,12 @@ jobs:
       - name: Set environment
         run: |
           echo "::set-env name=VERSION::$(echo "${{ github.event.deployment.sha }}" | cut -c1-7)"
-          echo "::set-env name=AWS_S3_BUCKET::$(echo "${{ secrets.S3_BUCKET_STAGING }}")"
+          echo "::set-env name=AWS_S3_BUCKET::sandbox-astromat-staging"
     
       - name: Set production bucket
         if: ${{ github.event.deployment.environment == 'production' }}
         run: |
-          echo "::set-env name=AWS_S3_BUCKET::$(echo "${{ secrets.S3_BUCKET_PRODUCTION }}")"
+          echo "::set-env name=AWS_S3_BUCKET::sandbox-astromat-production"
 
       - name: Update deployment status
         run: |
