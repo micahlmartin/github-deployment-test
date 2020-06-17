@@ -26,20 +26,15 @@ jobs:
         run:
           echo "${{ toJson(github) }}"
 
-      - name: Set commit version info
+      - name: Set environment
         run: |
           echo "::set-env name=VERSION::$(echo "${{ github.event.deployment.sha }}" | cut -c1-7)"
+          echo "::set-env name=AWS_S3_BUCKET::$(echo "${{ secrets.S3_BUCKET_STAGING }}")"
     
-      - name: Set bucket
-        run: |
-          echo "::set-env name=AWS_S3_BUCKET::$(echo "${{ secrets.S3_BUCKET_STAGING }}" | cut -c1-7)"
-          echo "::set-env name=AWS_S3_BUCKET::$(echo "staging" | cut -c1-7)"
-
       - name: Set production bucket
         if: ${{ github.event.deployment.environment == 'production' }}
         run: |
-          echo "::set-env name=AWS_S3_BUCKET::$(echo "${{ secrets.S3_BUCKET_PRODUCTION }}" | cut -c1-7)"
-          echo "::set-env name=AWS_S3_BUCKET::$(echo "production" | cut -c1-7)"
+          echo "::set-env name=AWS_S3_BUCKET::$(echo "${{ secrets.S3_BUCKET_PRODUCTION }}")"
 
       - name: Update deployment status
         run: |
