@@ -9,7 +9,6 @@ env:
   AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_REGION: 'us-west-1'
-  AWS_S3_BUCKET: ${{ secrets.S3_BUCKET_STAGING }}
   ENV: staging
 
 jobs:
@@ -30,7 +29,12 @@ jobs:
       - name: Set commit version info
         run: |
           echo "::set-env name=VERSION::$(echo "${{ github.event.deployment.sha }}" | cut -c1-7)"
-      
+    
+      - name: Set bucket
+        run: |
+          echo "::set-env name=AWS_S3_BUCKET::$(echo "${{ secrets.S3_BUCKET_STAGING }}" | cut -c1-7)"
+          echo "::set-env name=AWS_S3_BUCKET::$(echo "staging" | cut -c1-7)"
+
       - name: Set production bucket
         if: ${{ github.event.deployment.environment == 'production' }}
         run: |
