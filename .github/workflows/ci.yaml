@@ -37,6 +37,12 @@ jobs:
         run: |
           echo "::set-env name=IMAGE::${IMAGE_REPOSITORY}:${VERSION}"
 
+      - name: Fetch assets
+        run: |
+          CONTAINER=$(docker create micahlmartin/github-deployment-test:sha-${VERSION})
+          docker cp $CONTAINER:/srv/build ./assets
+          ls -la ./assets
+
       - uses: docker/build-push-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
