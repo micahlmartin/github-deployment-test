@@ -44,20 +44,20 @@ jobs:
       #             \"description\": \"Uploading assets to S3 bucket.\" \
       #           }"
 
-      - name: Fetch assets
-        run: |
-          docker pull ${}:${VERSION}
-          CONTAINER=$(docker create ${IMAGE_REPOSITORY}:${VERSION})
-          docker cp $CONTAINER:/srv/build ./assets
-          ls -la ./assets
+      # - name: Fetch assets
+      #   run: |
+      #     docker pull ${}:${VERSION}
+      #     CONTAINER=$(docker create ${IMAGE_REPOSITORY}:${VERSION})
+      #     docker cp $CONTAINER:/srv/build ./assets
+      #     ls -la ./assets
 
-      - name: Upload to S3
-        uses: jakejarvis/s3-sync-action@master
-        with:
-          args: --acl public-read --follow-symlinks --delete
-        env:
-          AWS_S3_BUCKET: ${{ secrets.S3_BUCKET_STAGING }}
-          SOURCE_DIR: ./assets
+      # - name: Upload to S3
+      #   uses: jakejarvis/s3-sync-action@master
+      #   with:
+      #     args: --acl public-read --follow-symlinks --delete
+      #   env:
+      #     AWS_S3_BUCKET: ${{ secrets.S3_BUCKET_STAGING }}
+      #     SOURCE_DIR: ./assets
 
       - name: Set status on failure
         if: ${{ failure() }}
