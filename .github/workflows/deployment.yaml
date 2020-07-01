@@ -10,6 +10,7 @@ env:
   AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
   AWS_REGION: 'us-west-1'
   AWS_S3_BUCKET: ${{ secrets.S3_BUCKET_PRODUCTION }}
+  IMAGE_REPOSITORY: micahlmartin/github-deployment-test
 
 jobs:
 
@@ -24,25 +25,32 @@ jobs:
 
       - name: Set environment
         run: |
-          echo "::set-env name=VERSION::$(echo "${{ github.event.deployment.sha }}" | cut -c1-7)"
+          echo "::set-env name=VERSION::sha-$(echo "${{ github.event.deployment.sha }}" | cut -c1-7)"
 
-      - name: Update deployment status
-        run: |
-          curl -X POST \
-            --url ${{ github.event.deployment.statuses_url }} \
-            -H 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
-            -H 'content-type: application/json' \
-            -H 'accept: application/vnd.github.flash-preview+json' \
-            -d "{ \
-                  \"environment\": \"production\", \
-                  \"state\": \"in_progress\", \
-                  \"description\": \"Uploading assets to S3 bucket.\" \
-                }"
+      - name: Create a Release
+        uses: elgohr/Github-Hub-Action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: api -X POST ${{ github.event.deployment.statuses_url }} -F environment=${{ github.event.deployment.environment }} -F state=in_progress -F description="Uploading assets to S3 bucket."
+          
+      # - name: Update deployment status
+      #   run: |
+      #     curl -X POST \
+      #       --url ${{ github.event.deployment.statuses_url }} \
+      #       -H 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+      #       -H 'content-type: application/json' \
+      #       -H 'accept: application/vnd.github.flash-preview+json' \
+      #       -d "{ \
+      #             \"environment\": \"${{ github.event.deployment.environment }}\", \
+      #             \"state\": \"in_progress\", \
+      #             \"description\": \"Uploading assets to S3 bucket.\" \
+      #           }"
 
       - name: Fetch assets
         run: |
-          docker pull micahlmartin/github-deployment-test:sha-${VERSION}
-          CONTAINER=$(docker create micahlmartin/github-deployment-test:sha-${VERSION})
+          docker pull ${}:${VERSION}
+          CONTAINER=$(docker create ${IMAGE_REPOSITORY}:${VERSION})
           docker cp $CONTAINER:/srv/build ./assets
           ls -la ./assets
 
@@ -65,14 +73,22 @@ jobs:
           echo "::set-env name=STATUS::success"
 
       - name: Update deployment status
+        
+        # run: |
+        #   curl -X POST \
+        #     --url ${{ github.event.deployment.statuses_url }} \
+        #     -H 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+        #     -H 'content-type: application/json' \
+        #     -d "{ \
+        #           \"environment\": \"${{ github.event.deployment.environment }}\", \
+        #           \"state\": \"${STATUS}\", \
+        #           \"description\": \"Deployment finished successfully.\" \
+        #         }"
+
+      - name: Create a Release
         if: ${{ always() }}
-        run: |
-          curl -X POST \
-            --url ${{ github.event.deployment.statuses_url }} \
-            -H 'authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
-            -H 'content-type: application/json' \
-            -d "{ \
-                  \"environment\": \"${{ github.event.deployment.environment }}\", \
-                  \"state\": \"${STATUS}\", \
-                  \"description\": \"Deployment finished successfully.\" \
-                }"
+        uses: elgohr/Github-Hub-Action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: api -X POST ${{ github.event.deployment.statuses_url }} -F environment=${{ github.event.deployment.environment }} -F state=${STATUS} -F description="Uploading assets to S3 bucket."

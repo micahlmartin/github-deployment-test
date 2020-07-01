@@ -15,10 +15,6 @@ jobs:
 
     steps:
 
-      - name: debug
-        run: |
-          echo "${{ toJson(github) }}"
-
       - uses: actions/checkout@v2
         with:
           persist-credentials: false
@@ -44,7 +40,7 @@ jobs:
           tag_with_ref: true
           tag_with_sha: true
 
-      - name: Fetch assets
+      - name: Fetch assets from container
         run: |
           CONTAINER=$(docker create ${IMAGE_REPOSITORY}:${VERSION})
           docker cp $CONTAINER:/srv/build ./assets

@@ -1,0 +1,6 @@
+#!/bin/sh
+
+docker run --rm -it -v ${HOME}/.config/hub:/root/.config/hub micahlmartin/github-hub \
+  api -X POST /repos/micahlmartin/github-deployment-test/deployments \
+  -F ref=master \
+  -F environment=production
