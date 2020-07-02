@@ -12,6 +12,7 @@ env:
 jobs:
 
   deploy:
+
     runs-on: ubuntu-latest
 
     steps:
@@ -69,7 +70,7 @@ jobs:
         run: |
           echo "::set-env name=STATUS::success"
 
-      - name: Update deployment status
+      # - name: Update deployment status
         
         # run: |
         #   curl -X POST \
