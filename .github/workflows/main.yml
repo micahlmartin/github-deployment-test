@@ -24,3 +24,10 @@ jobs:
       - name: Set environment
         run: |
           echo "::set-env name=VERSION::sha-$(echo "${{ github.event.deployment.sha }}" | cut -c1-7)"
+
+      - name: Create a Release
+        uses: elgohr/Github-Hub-Action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          args: api -X POST ${{ github.event.deployment.statuses_url }} -F environment=${{ github.event.deployment.environment }} -F state=in_progress -F description="Uploading assets to S3 bucket."
